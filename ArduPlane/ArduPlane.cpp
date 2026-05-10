@@ -1276,6 +1276,8 @@ void Plane::active_airbrake()      //开发完成：空气刹车
     int16_t max_pwm_right = SRV_Channels::srv_channel(5)->get_output_max();*/
 
     if(g2.Airbrake_record == 1){
+         g2.Airbrake_pre_left.set_and_save(SRV_Channels::srv_channel(0)-> get_trim());            
+         g2.Airbrake_pre_right.set_and_save(SRV_Channels::srv_channel(5)-> get_trim());    
          g2.min_pwm_left.set_and_save(SRV_Channels::srv_channel(0)->get_output_min());
          g2.max_pwm_left.set_and_save(SRV_Channels::srv_channel(0)->get_output_max());
          g2.min_pwm_right.set_and_save(SRV_Channels::srv_channel(5)->get_output_min());
