@@ -3,6 +3,11 @@
 
 bool ModeAuto::_enter()
 {
+    plane.captured_altitude = plane.relative_ground_altitude(false);
+    plane.captured_pitch_pwm = plane.current_pitch_pwm;
+    gcs().send_text(MAV_SEVERITY_INFO, "Entering AUTO mode");
+    gcs().send_text(MAV_SEVERITY_INFO, "Altitude Captured: %f m", plane.captured_altitude);
+    //捕捉进入auto模式时的航点高度
 #if HAL_QUADPLANE_ENABLED
     // check if we should refuse auto mode due to a missing takeoff in
     // guided_wait_takeoff state
@@ -27,7 +32,7 @@ bool ModeAuto::_enter()
     // start or resume the mission, based on MIS_AUTORESET
     plane.mission.start_or_resume();
 
-    if (hal.util->was_watchdog_armed()) {
+    if (hal.util->was_watchdog_armed()) { 
         if (hal.util->persistent_data.waypoint_num != 0) {
             gcs().send_text(MAV_SEVERITY_INFO, "Watchdog: resume WP %u", hal.util->persistent_data.waypoint_num);
             plane.mission.set_current_cmd(hal.util->persistent_data.waypoint_num);
@@ -150,7 +155,7 @@ bool ModeAuto::_pre_arm_checks(size_t buflen, char *buffer) const
 {
 #if HAL_QUADPLANE_ENABLED
     if (plane.quadplane.enabled()) {
-        if (plane.quadplane.option_is_set(QuadPlane::Option::ONLY_ARM_IN_QMODE_OR_AUTO) &&
+        if (plane.quadplane.option_is_set(QuadPlane::OPTION::ONLY_ARM_IN_QMODE_OR_AUTO) &&
                 !plane.quadplane.is_vtol_takeoff(plane.mission.get_current_nav_cmd().id)) {
             hal.util->snprintf(buffer, buflen, "not in VTOL takeoff");
             return false;
