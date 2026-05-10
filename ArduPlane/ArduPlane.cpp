@@ -22,8 +22,6 @@
 
 #include "Plane.h"
 #include <AP_GPS/AP_GPS.h> // 确保包含头文件
-#include<AP_HAL/AP_HAL.h>
-
 
 #define SCHED_TASK(func, rate_hz, max_time_micros, priority) SCHED_TASK_CLASS(Plane, &plane, func, rate_hz, max_time_micros, priority)
 #define FAST_TASK(func) FAST_TASK_CLASS(Plane, &plane, func)
